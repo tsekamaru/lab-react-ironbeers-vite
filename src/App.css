@@ -1,0 +1,8 @@
+.form-floating .form-control::placeholder {
+  color: #999;
+}
+
+.btn-percent {
+  margin: 0;
+  padding: 0;
+}

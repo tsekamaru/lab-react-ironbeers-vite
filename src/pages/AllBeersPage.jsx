@@ -5,40 +5,54 @@ import BeerCard from "../components/beerCard";
 function AllBeersPage() {
   const [beers, setBeers] = useState([]);
   const [query, setQuery] = useState("");
-
-  // useEffect(() => {
-  //   axios
-  //     .get("https://ih-beers-api2.herokuapp.com/beers")
-  //     .then((response) => {
-  //       setBeers(response.data);
-  //       console.log(response.data);
-  //     })
-  //     .catch((error) => console.log("fetching error", error));
-  // }, []);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     axios
       .get(`https://ih-beers-api2.herokuapp.com/beers/search?q=${query}`)
-      .then((response) => setBeers(response.data))
-      .catch((error) => console.log("fetching error", error));
+      .then((response) => {
+        setBeers(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log("fetching error", error);
+        setError(true);
+      });
   }, [query]);
 
   const handleChange = (e) => {
     setQuery(e.target.value);
   };
 
+  if (error)
+    return (
+      <div className="text-center mt-5">
+        <p className="">There is no item to display ...</p>
+      </div>
+    );
+
+  if (loading)
+    return (
+      <div className="text-center mt-5">
+        <div className="spinner-border" role="status"></div>
+        <p className="">Loading...</p>
+      </div>
+    );
+
   return (
     <div className="container-md mt-3">
       <div className="container-fluid d-flex justify-content-center">
         <div className="input-group mb-4" style={{ maxWidth: "20rem" }}>
-          <span
+          <label
             className="input-group-text text-white bg-dark border-bottom border-body"
             data-bs-theme="dark"
-            id="searchBar"
+            htmlFor="searchBar"
           >
             Search
-          </span>
+          </label>
           <input
+            id="searchBar"
             type="text"
             className="form-control"
             placeholder="Search Beers by their Names"
